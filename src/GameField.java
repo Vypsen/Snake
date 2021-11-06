@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.Arrays;
 import java.util.Random;
 
 
@@ -36,6 +35,10 @@ public class GameField extends JPanel implements ActionListener {
     }
 
     public void initGame(){
+
+        dots = 3;
+        delay = 250;
+
         int start_position_x = (new Random().nextInt(21-3) + 3);
         int start_position_y =  new Random().nextInt(20)*DOT_SIZE;
         current_orientation = orientation[new Random().nextInt(4)];
@@ -48,9 +51,13 @@ public class GameField extends JPanel implements ActionListener {
 //        System.out.println(Arrays.toString(y));
 
         timer = new Timer(delay,this);
-//        System.out.println(current_orientation);
+
         timer.start();
         createApple();
+        System.out.println(delay);
+
+
+
     }
 
     public void createApple(){
@@ -59,6 +66,7 @@ public class GameField extends JPanel implements ActionListener {
     }
 
     public void loadImage(){
+
         ImageIcon imageIconApple = new ImageIcon("apple.png");
         apple = imageIconApple.getImage();
 
@@ -76,6 +84,8 @@ public class GameField extends JPanel implements ActionListener {
                 g.drawImage(dot,x[i],y[i], this);
             }
         }
+
+
     }
 
     public void move(){
@@ -112,25 +122,36 @@ public class GameField extends JPanel implements ActionListener {
     }
 
 
+
     public void checkApple(){
         if(x[0] == appleX && y[0] == appleY){
+            System.out.println(timer.getDelay());
             dots++;
             if(delay!=10) timer.setDelay(delay-=5);
             createApple();
+
         }
 
     }
 
+//    public void createCounter() {
+//        JLabel counter = new JLabel("0");
+//        counter.setForeground(Color.WHITE);
+//        add(counter);
+//        counter.setFont(new Font("Serif", Font.PLAIN, 14));
+//    }
+
     public void restartGame(){
         inGame = false;
-        JButton button = new JButton("Test button");
-        button.setBackground(Color.ORANGE);
+        JButton button = new JButton("Restart game");
+        button.setBackground(Color.RED);
         add(button);
-
+        button.setBounds(120, 50,150, 50 );
         button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 inGame = true;
                 button.setVisible(false);
+                MainWindow mw = new MainWindow();
             }
         });
 
@@ -140,6 +161,7 @@ public class GameField extends JPanel implements ActionListener {
     }
 
     class FieldKeyListener extends KeyAdapter {
+
         @Override
         public void keyPressed(KeyEvent e) {
             super.keyPressed(e);
@@ -163,6 +185,8 @@ public class GameField extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+
+
         if(inGame){
             checkApple();
             checkCollisions();
